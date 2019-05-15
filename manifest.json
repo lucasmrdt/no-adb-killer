@@ -1,0 +1,14 @@
+{
+  "name": "no-adb-killer",
+  "version": "1.0",
+  "description": "Avoid abd killer, enjoy website without advertisement again!",
+  "manifest_version": 2,
+  "background": {
+    "scripts": ["src/background.js"]
+  },
+  "permissions": [
+    "webRequest",
+    "*://*/",
+    "webRequestBlocking"
+  ]
+}
