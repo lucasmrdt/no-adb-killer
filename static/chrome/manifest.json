@@ -4,7 +4,7 @@
   "description": "Avoid abd killer, enjoy website without advertisement again!",
   "manifest_version": 2,
   "background": {
-    "scripts": ["dist/background.js"]
+    "scripts": ["background.js"]
   },
   "web_accessible_resources": [
     "scripts/*"

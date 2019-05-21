@@ -2,49 +2,30 @@
   "name": "no-adb-killer",
   "version": "1.0.0",
   "description": "",
-  "dependencies": {},
-  "devDependencies": {
-    "@types/chrome": "0.0.85",
-    "@types/diff": "^4.0.2",
-    "@types/mocha": "^5.2.6",
-    "@types/node": "^12.0.2",
-    "@types/prompts": "^2.4.0",
-    "@types/webpack": "^4.4.31",
-    "colors": "^1.3.3",
-    "diff": "^4.0.1",
-    "fast-diff": "^1.2.0",
-    "husky": "^2.3.0",
-    "mocha": "^6.1.4",
-    "node-fetch": "^2.6.0",
-    "prompts": "^2.0.4",
-    "simple-git": "^1.113.0",
-    "ts-loader": "^6.0.0",
-    "typescript": "^3.4.5",
-    "webpack": "^4.31.0",
-    "webpack-cli": "^3.3.2",
-    "webpack-conditional-loader": "^1.0.12",
-    "webpack-merge": "^4.2.1"
-  },
   "scripts": {
-    "clear": "rm -rf dist",
-    "test": "npm run try-build && npm run typescript-test && npm run mocha",
-    "start": "npm run try-clear && npm run webpack-watch",
-    "build": "npm run try-clear && npm run webpack-build && npm run typescript && npm run build-updater",
-    "build:force": "npm run clear && npm run webpack-build && npm run typescript && npm run build-updater:force",
-    "build-updater": "node dist/src/build-updater.js",
-    "build-updater:force": "node dist/src/build-updater.js --force",
-    "mocha": "mocha dist/test/tests.js",
-    "typescript": "tsc",
-    "typescript-test": "tsc test/*.ts --outDir dist/ --resolveJsonModule",
-    "webpack-build": "NODE_ENV=PRODUCTION webpack --config webpack/webpack.prod.js",
-    "webpack-watch": "NODE_ENV=DEVELOPMENT webpack --config webpack/webpack.dev.js --watch",
-    "try-build": "stat dist > /dev/null 2>&1 || npm run build",
-    "try-clear": "stat dist > /dev/null 2>&1 || npm run clear"
+    "clear": "echo \"🔄 Clearing\"; rm -rf app dist",
+    "test": "run-s -s build mocha",
+    "start": "npm-watch",
+    "build": "run-s -s clear build:scripts launch-builder build:extension",
+    "build:scripts": "echo \"🔹 Building scripts\"; webpack --display=errors-only --config webpack/webpack-scripts-build.js --mode=production",
+    "build:extension": "echo \"🔷 Building extension\"; webpack --display=errors-only --config webpack/webpack-extension-build.js --mode=production",
+    "start:scripts": "echo \"#️⃣  Starting scripts\"; webpack --display=errors-only --config webpack/webpack-scripts-build.js --mode=development",
+    "start:extension": "echo \"*️⃣  Starting extension\"; webpack --display=errors-only --config webpack/webpack-extension-build.js --mode=development",
+    "start:watch": "run-s -s clear start:scripts launch-builder start:extension",
+    "launch-builder": "echo \"🔵 Launching builder\"; node dist/build",
+    "mocha": "echo \"🕑 Testing\"; mocha dist/test.js"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm test",
       "pre-push": "npm test"
+    }
+  },
+  "watch": {
+    "start:watch": {
+      "patterns": ["static", "src", "test"],
+      "extensions": [".ts", ".json", ".js"],
+      "ignore": ["static/config.build.json"]
     }
   },
   "repository": {
@@ -57,5 +38,31 @@
   "bugs": {
     "url": "https://github.com/lucasmrdt/no-adb-killer/issues"
   },
-  "homepage": "https://github.com/lucasmrdt/no-adb-killer#readme"
+  "homepage": "https://github.com/lucasmrdt/no-adb-killer#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chrome": "0.0.85",
+    "@types/diff": "^4.0.2",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^12.0.2",
+    "@types/prompts": "^2.4.0",
+    "@types/webpack": "^4.4.31",
+    "colors": "^1.3.3",
+    "copy-webpack-plugin": "^5.0.3",
+    "diff": "^4.0.1",
+    "fast-diff": "^1.2.0",
+    "husky": "^2.3.0",
+    "mocha": "^6.1.4",
+    "node-fetch": "^2.6.0",
+    "npm-run-all": "^4.1.5",
+    "npm-watch": "^0.6.0",
+    "prompts": "^2.0.4",
+    "simple-git": "^1.113.0",
+    "ts-loader": "^6.0.0",
+    "typescript": "^3.4.5",
+    "webpack": "^4.31.0",
+    "webpack-cli": "^3.3.2",
+    "webpack-conditional-loader": "^1.0.12",
+    "webpack-merge": "^4.2.1"
+  }
 }

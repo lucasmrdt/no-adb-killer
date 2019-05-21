@@ -2,54 +2,70 @@ import * as nodeDiff from 'fast-diff';
 import * as assert from 'assert';
 import * as path from 'path';
 
-import * as blacklistJSON from '../src/assets/blacklist.json';
-import {blacklistMapper} from '../src/utils/JSON';
-import {readfile} from '../src/utils/file';
-import {fetchText} from '../src/utils/network';
+import {fetchText, readfile, chromePatternMatch} from 'src/utils';
 
-import {BlacklistItemType, BlacklistType, JSONBlacklistType} from '../src/types';
+import {RedirectItemType, ReplaceItemType, ConfigType} from 'src/types';
 
 const BASE_PATH = path.join(__dirname, '..');
+const SCRIPT_BASE_PATH = path.join(BASE_PATH, 'dist/scripts');
+const CONFIG_PATH = path.join(BASE_PATH, 'static/config.build.json');
 
-const TYPED_BLACKLIST_JSON = <JSONBlacklistType> blacklistJSON;
-const BLACKLIST: BlacklistType = blacklistMapper(TYPED_BLACKLIST_JSON, {onlyReplacementScript: true});
-
-type FileType = {
+type TestConfigType = {
   oldContent?: string,
   newContent?: string,
-} & BlacklistItemType;
+} & ReplaceItemType & RedirectItemType;
 
 describe('#script difference', () => {
-  let files: FileType[] = BLACKLIST;
+  let configs: TestConfigType[] = [];
 
-  it('should get initial script content', async () => {
-    const promises = files.map(async file => {
-      const {oldScriptUrl} = file;
-      const content = await fetchText(oldScriptUrl);
-      return {...file, oldContent: content};
-    });
-    files = await Promise.all(promises);
+  it('should read config', async () => {
+    const fileContent = await readfile(CONFIG_PATH);
+    const JSONConfig: ConfigType = JSON.parse(fileContent);
+    const filteredConfigs = JSONConfig.filter(({action}) => (
+      action === 'redirect' || action === 'replace'
+    ));
+    configs = <TestConfigType[]> filteredConfigs;
   });
 
-  it('should read file content', async () => {
-    const promises = files.map(async file => {
-      const filePath = path.join(BASE_PATH, file.pathRedirection);
-      const content = await readfile(filePath);
-      return {...file, newContent: content};
+  it('should get the initial script', async () => {
+    const promises = configs.map(async config => {
+      const {url} = config;
+      const content = await fetchText(url);
+      return {...config, oldContent: content};
     });
-    files = await Promise.all(promises);
+    configs = await Promise.all(promises);
   });
 
-  it('should have unique name', () => {
-    const names = files.map(({name}) => name);
-    const uniquesNames = new Set(names);
-    assert(names.length === uniquesNames.size);
+  it('should read the replaced script', async () => {
+    const promises = configs.map(async config => {
+      const scriptPath = path.join(SCRIPT_BASE_PATH, config.target);
+      const content = await readfile(scriptPath);
+      return {...config, newContent: content};
+    });
+    configs = await Promise.all(promises);
   });
 
-  it('should have correct diff', () => {
-    files.forEach(file => {
-      const diff = nodeDiff(file.oldContent, file.newContent);
-      assert.deepEqual(diff, file.diff);
+  it('should have unique domain', () => {
+    const domains = configs.map(({domain}) => domain);
+    const uniquesNames = new Set(domains);
+    assert(domains.length === uniquesNames.size);
+  });
+
+  it('should have correct differences', () => {
+    configs.forEach(config => {
+      const diff = nodeDiff(config.oldContent, config.newContent);
+      assert.deepEqual(diff, config.diff, `[${config.domain}] difference (diff) seems to be invalid.`);
     });
+  });
+
+  it('should have correct chrome pattern', () => {
+    const domains = configs.map(({domain }) => domain);
+    configs.forEach(({pattern, domain}) => configs.forEach(({domain: testedDomain, url: testedUrl}) => {
+      if (testedDomain === domain) {
+        assert(chromePatternMatch(testedUrl, pattern), `pattern '${pattern}' must match with url '${testedUrl}'.`);
+      } else {
+        assert(!chromePatternMatch(testedUrl, pattern), `pattern '${pattern}' mustn't match with url '${testedUrl}'.`);
+      }
+    }));
   });
 });

@@ -1,9 +1,13 @@
 import * as fs from 'fs';
 
-export const writefile = (path, file) => new Promise((res, rej) => (
-  fs.writeFile(path, file, {encoding: 'utf8'}, e => e ? rej(e) : res())
-));
+export const writefile = async (filePath: string, file: string) => {
+  const directory = filePath.split('/').slice(0, -1).join('/');
+  if (!fs.existsSync(directory)) {
+    await fs.promises.mkdir(directory, {recursive: true});
+  }
+  return fs.promises.writeFile(filePath, file, {encoding: 'utf8'});
+};
 
-export const readfile = (path): Promise<string> => new Promise((res, rej) => (
-  fs.readFile(path, {encoding: 'utf8'}, (e, content) => e ? rej(e) : res(content))
-));
+export const readfile = (filePath: string): Promise<string> => (
+  fs.promises.readFile(filePath, {encoding: 'utf8'})
+);

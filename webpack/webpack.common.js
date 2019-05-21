@@ -1,21 +1,13 @@
+require('dotenv').config();
+
 const webpack = require('webpack');
 const path = require('path');
 
-const rootDir = '../src/';
+const BASE_PATH = path.join(__dirname, '..');
 
 module.exports = {
-  entry: {
-    background: path.join(__dirname, rootDir + 'background.ts'),
-  },
   output: {
-    path: path.join(__dirname, '../dist'),
-    filename: '[name].js'
-  },
-  optimization: {
-    splitChunks: {
-      name: 'vendor',
-      chunks: 'initial',
-    }
+    filename: '[name].js',
   },
   module: {
     rules: [
@@ -28,5 +20,10 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js'],
+    alias: {
+      src: path.join(BASE_PATH, 'src'),
+      dist: path.join(BASE_PATH, 'dist'),
+      static: path.join(BASE_PATH, 'static'),
+    },
   },
 };
