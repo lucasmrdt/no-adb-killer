@@ -22,6 +22,7 @@ module.exports = {
       src: path.join(BASE_PATH, 'src'),
       dist: path.join(BASE_PATH, 'dist'),
       static: path.join(BASE_PATH, 'static'),
+      test: path.join(BASE_PATH, 'test'),
     },
   },
 };

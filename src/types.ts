@@ -54,12 +54,6 @@ export type ReplaceItemType = {
    * RexExp Tip: `$1`, `$2`, ... allows you to inject group into your replacement.
    */
   to: string,
-  /**
-   * @AUTOMATIC ⛔️
-   * The name of the replaced script.
-   * It's generated automatically by the `build.js` script.
-   */
-  target?: string,
 } & RawItemType;
 
 /**

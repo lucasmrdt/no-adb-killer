@@ -2,12 +2,13 @@ import * as nodeDiff from 'fast-diff';
 import * as assert from 'assert';
 import * as path from 'path';
 
+import {assertValidConfiguration} from './config-assert';
 import {fetchText, readfile, chromePatternMatch} from 'src/utils';
 
 import {RedirectItemType, ReplaceItemType, ConfigType} from 'src/types';
 
 const BASE_PATH = path.join(__dirname, '..');
-const SCRIPT_BASE_PATH = path.join(BASE_PATH, 'dist/scripts');
+const SCRIPT_BASE_PATH = path.join(BASE_PATH, 'app/scripts');
 const CONFIG_PATH = path.join(BASE_PATH, 'static/config.build.json');
 
 type TestConfigType = {
@@ -15,7 +16,7 @@ type TestConfigType = {
   newContent?: string,
 } & ReplaceItemType & RedirectItemType;
 
-describe('#script difference', () => {
+describe('#CONFIG', () => {
   let configs: TestConfigType[] = [];
 
   it('should read config', async () => {
@@ -25,6 +26,10 @@ describe('#script difference', () => {
       action === 'redirect' || action === 'replace'
     ));
     configs = <TestConfigType[]> filteredConfigs;
+  });
+
+  it('should have correct config file', () => {
+    assertValidConfiguration(configs);
   });
 
   it('should get the initial script', async () => {
@@ -38,7 +43,7 @@ describe('#script difference', () => {
 
   it('should read the replaced script', async () => {
     const promises = configs.map(async config => {
-      const scriptPath = path.join(SCRIPT_BASE_PATH, config.target);
+      const scriptPath = path.join(SCRIPT_BASE_PATH, `${config.domain}.js`);
       const content = await readfile(scriptPath);
       return {...config, newContent: content};
     });

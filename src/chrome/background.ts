@@ -12,7 +12,13 @@ const URLS: string[] = TYPED_CONFIG_JSON.map(({pattern}) => pattern);
 // @MARK: Handlers Functions
 type ResponseType = {cancel?: boolean, redirectUrl?: string};
 
-const redirectAndReplaceHandler = (url: string, config: RedirectItemType | ReplaceItemType): ResponseType => {
+const replaceHandler = (url: string, config: ReplaceItemType): ResponseType => {
+  const scriptPath = `scripts/${config.domain}.js`;
+  console.log(`'${url.bold}' ▶️ '${scriptPath.bold}'`);
+  return {redirectUrl: chrome.extension.getURL(scriptPath)};
+};
+
+const redirectHandler = (url: string, config: RedirectItemType): ResponseType => {
   const scriptPath = `scripts/${config.target}`;
   console.log(`'${url.bold}' ➡️ '${scriptPath.bold}'`);
   return {redirectUrl: chrome.extension.getURL(scriptPath)};
@@ -24,8 +30,8 @@ const cancelHandler = (url: string, _: CancelItemType): ResponseType => {
 };
 
 const HANDLERS = {
-  redirect: redirectAndReplaceHandler,
-  replace: redirectAndReplaceHandler,
+  replace: replaceHandler,
+  redirect: redirectHandler,
   cancel: cancelHandler,
 };
 
