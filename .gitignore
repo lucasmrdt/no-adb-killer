@@ -3,3 +3,6 @@ dist/
 app/
 .vscode/
 package-lock.json
+app.zip
+.env
+.DS_Store

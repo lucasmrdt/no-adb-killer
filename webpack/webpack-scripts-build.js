@@ -11,6 +11,7 @@ const scriptBuild = merge(common, {
   entry: {
     'minify-config': path.join(SCRIPT_DIR, 'minify-config.ts'),
     'update-config': path.join(SCRIPT_DIR, 'update-config.ts'),
+    'deploy': path.join(SCRIPT_DIR, 'deploy.ts'),
   },
   output: {
     path: OUT_PATH,

@@ -15,5 +15,8 @@
       "static/*": ["static/*"],
       "test/*": ["test/*"]
     }
-  }
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

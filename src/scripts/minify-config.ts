@@ -19,7 +19,7 @@ const TYPED_CONFIGS = <ConfigType> CONFIGS;
 (async () => {
   try {
     assertValidConfiguration(TYPED_CONFIGS);
-    const minifiedJSON = withoutKeys(['diff', 'from', 'to', 'domain'], TYPED_CONFIGS);
+    const minifiedJSON = withoutKeys(['diff', 'from', 'to'], TYPED_CONFIGS);
     await writefile(OUTPUT_CONFIG_PATH, JSON.stringify(minifiedJSON));
     console.log(`✅ '${path.basename(OUTPUT_CONFIG_PATH)}' file is now minfified.`);
   } catch (e) {

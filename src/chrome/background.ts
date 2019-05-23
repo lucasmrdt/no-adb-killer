@@ -1,4 +1,3 @@
-import 'colors';
 import {chromePatternMatch} from 'src/utils/string';
 
 // @ts-ignore
@@ -12,26 +11,27 @@ const URLS: string[] = TYPED_CONFIG_JSON.map(({pattern}) => pattern);
 // @MARK: Handlers Functions
 type ResponseType = {cancel?: boolean, redirectUrl?: string};
 
-const replaceHandler = (url: string, config: ReplaceItemType): ResponseType => {
-  const scriptPath = `scripts/${config.domain}.js`;
-  console.log(`'${url.bold}' ▶️ '${scriptPath.bold}'`);
+const replaceHandler = (url: string, config: RedirectItemType): ResponseType => {
+  const scriptPath = `scripts/${config.target}`;
+  console.log(`'${url}' ➡️ '${scriptPath}'`);
   return {redirectUrl: chrome.extension.getURL(scriptPath)};
 };
 
-const redirectHandler = (url: string, config: RedirectItemType): ResponseType => {
-  const scriptPath = `scripts/${config.target}`;
-  console.log(`'${url.bold}' ➡️ '${scriptPath.bold}'`);
+const redirectHandler = (url: string, config: ReplaceItemType): ResponseType => {
+  console.log(config);
+  const scriptPath = `scripts/${config.domain}.js`;
+  console.log(`'${url}' ▶️ '${scriptPath}'`);
   return {redirectUrl: chrome.extension.getURL(scriptPath)};
 };
 
 const cancelHandler = (url: string, _: CancelItemType): ResponseType => {
-  console.log(`❌ '${url.bold}'`);
+  console.log(`❌ '${url}'`);
   return {cancel: true};
 };
 
 const HANDLERS = {
-  replace: replaceHandler,
-  redirect: redirectHandler,
+  replace: redirectHandler,
+  redirect: replaceHandler,
   cancel: cancelHandler,
 };
 
