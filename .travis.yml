@@ -4,6 +4,8 @@ node_js:
 cache: npm
 deploy:
   provider: script
+  skip_cleanup: true
   script: npm run deploy
   on:
     branch: master
+    tags: false
