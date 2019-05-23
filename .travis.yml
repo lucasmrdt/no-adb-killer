@@ -1,15 +1,10 @@
 language: node_js
 node_js:
   - "11.2.0"
-
-stages:
-  - deploy
-
+cache: npm
 deploy:
-  stage: deploy
-  only:
-    - master
+  provider: script
+  script: npm run deploy
   on:
+    branch: master
     tags: true
-  script:
-    - npm run deploy
