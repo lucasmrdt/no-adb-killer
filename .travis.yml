@@ -6,5 +6,5 @@ deploy:
   provider: script
   script: npm run deploy
   on:
-    branch: master
+    all_branches: true
     tags: true
