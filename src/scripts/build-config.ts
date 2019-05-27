@@ -1,7 +1,6 @@
-import 'colors';
 import * as nodeDiff from 'fast-diff';
 import * as path from 'path';
-import {readfile, writefile, fetchText} from 'src/utils';
+import {readfile, writefile, fetchText, withoutKeys} from 'src/utils';
 import {assertValidConfiguration} from 'test/config-assert';
 
 import * as CONFIG from 'static/config.json';
@@ -21,33 +20,6 @@ const OUTPUT_CONFIG_PATH = path.join(STATIC_PATH, 'config.build.json');
 
 // @MARK: Configuration
 const TYPED_CONFIGS = <ConfigType> CONFIG;
-const MAX_PART_LENGTH = 25;
-
-// @MARK: Log
-const displaySlicedValue = (value: string) => {
-  if (value.length <= MAX_PART_LENGTH) {
-    process.stdout.write(value.white);
-    return;
-  }
-  process.stdout.write(value.slice(0, MAX_PART_LENGTH/2).white);
-  process.stdout.write('[...]'.cyan);
-  process.stdout.write(value.slice(-MAX_PART_LENGTH/2).white);
-};
-
-const displayDiff = (item: ConfigItemType, diff: nodeDiff.Diff[]) => {
-  console.log(`🌀 This is your modifications on the '${item.domain}' script:`.bold);
-  diff.forEach(part => {
-    const [state, value] = part;
-    if (state === nodeDiff.INSERT) {
-      process.stdout.write(value.green);
-    } else if (state === nodeDiff.DELETE) {
-      process.stdout.write(value.red);
-    } else {
-       displaySlicedValue(value);
-    }
-  });
-  process.stdout.write('\n\n');
-};
 
 // @MARK: Getters/Setters
 const getJSONConfigItem = (domain: string) => {
@@ -58,7 +30,15 @@ const getJSONConfigItem = (domain: string) => {
   return found;
 };
 
-// @MARK: Actions Functions
+const setJSONConfigItem = (domain: string, value: ConfigItemType) => {
+  const index = TYPED_CONFIGS.findIndex(item => item.domain === domain);
+  if (index === -1) {
+    throw new Error(`Config of '${domain}' is unfound.`);
+  }
+  TYPED_CONFIGS[index] = value;
+};
+
+// @MARK: Actions Handlers
 const replaceAction = async (item: ReplaceItemType, oldScript: string) => {
   const {from, to} = item;
   const pattern = new RegExp(from, 'g');
@@ -67,10 +47,14 @@ const replaceAction = async (item: ReplaceItemType, oldScript: string) => {
   const scriptPath = path.join(SCRIPT_PATH, scriptName);
   await writefile(scriptPath, newScript);
 
-  const JSONItem = <ReplaceItemType> getJSONConfigItem(item.domain);
-  JSONItem.diff = nodeDiff(oldScript, newScript);
-
-  displayDiff(item, JSONItem.diff);
+  // @XXX 'replace' => 'redirect'
+  const redirectConfig: RedirectItemType = {
+    ...withoutKeys(['from', 'to'], item),
+    action: 'redirect',
+    diff: nodeDiff(oldScript, newScript),
+    target: scriptName,
+  };
+  setJSONConfigItem(item.domain, redirectConfig);
 };
 
 const redirectAction = async (item: RedirectItemType, oldScript: string) => {
@@ -78,7 +62,6 @@ const redirectAction = async (item: RedirectItemType, oldScript: string) => {
   const newScript = await readfile(scriptPath);
   const JSONItem = getJSONConfigItem(item.domain);
   JSONItem.diff = nodeDiff(oldScript, newScript);
-  displayDiff(item, JSONItem.diff);
 };
 
 const buildConfig = async (config: ConfigItemType) => {

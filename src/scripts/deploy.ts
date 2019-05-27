@@ -1,8 +1,8 @@
 import 'colors';
-import * as chrome from 'chrome-webstore-upload';
 import * as zipFolder from 'zip-folder';
 import * as path from 'path';
 import * as fs from 'fs';
+import * as chrome from 'webstore-upload';
 
 const CHROME_PATH = path.join(process.cwd(), 'app');
 const OUTPUT_PATH = path.join(process.cwd(), 'app.zip');
@@ -21,17 +21,29 @@ const zip = (inPath, outPath) => new Promise((res, rej) => (
   zipFolder(inPath, outPath, e => e ? rej(e) : res())
 ));
 
+const rm = (path) => new Promise((res, rej) => (
+  fs.unlink(path, e => e ? rej(e) : res())
+));
+
 (async () => {
   assertEnvironment();
 
-  const webStore = chrome({
-    extensionId: process.env.EXTENSION_ID,
-    clientId: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    refreshToken: process.env.REFRESH_TOKEN,
-  });
-
   await zip(CHROME_PATH, OUTPUT_PATH);
-  const extensionSource = fs.createReadStream(OUTPUT_PATH);
-  await webStore.uploadExisting(extensionSource);
+  await chrome({
+    accounts: {
+      default: {
+        publish: true,
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.CLIENT_SECRET,
+        refresh_token: process.env.REFRESH_TOKEN,
+      },
+    },
+    extensions: {
+      'no-adb-killer': {
+        appID: process.env.EXTENSION_ID,
+        zip: OUTPUT_PATH,
+      },
+    },
+  });
+  await rm(OUTPUT_PATH);
 })();

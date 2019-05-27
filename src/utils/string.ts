@@ -11,3 +11,8 @@ export const chromePatternMatch = (str: string, pattern: string): boolean => {
   }
   return true;
 };
+
+export const slice = (str: string, maxSize = 20) => (str.length > maxSize
+  ? `${str.slice(0, maxSize/2)}[...]${str.slice(-maxSize/2)}`
+  : str
+);

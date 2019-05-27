@@ -3,7 +3,7 @@ import * as path from 'path';
 import {writefile, withoutKeys} from 'src/utils';
 import {assertValidConfiguration} from 'test/config-assert';
 
-import * as CONFIGS from 'static/config.json';
+import * as CONFIGS from 'static/config.build.json';
 
 import {ConfigType} from '../types';
 

@@ -13,12 +13,11 @@ type ResponseType = {cancel?: boolean, redirectUrl?: string};
 
 const replaceHandler = (url: string, config: RedirectItemType): ResponseType => {
   const scriptPath = `scripts/${config.target}`;
-  console.log(`'${url}' ➡️ '${scriptPath}'`);
+  console.log(`'${url}' ↪️ '${scriptPath}'`);
   return {redirectUrl: chrome.extension.getURL(scriptPath)};
 };
 
 const redirectHandler = (url: string, config: ReplaceItemType): ResponseType => {
-  console.log(config);
   const scriptPath = `scripts/${config.domain}.js`;
   console.log(`'${url}' ▶️ '${scriptPath}'`);
   return {redirectUrl: chrome.extension.getURL(scriptPath)};
@@ -30,8 +29,8 @@ const cancelHandler = (url: string, _: CancelItemType): ResponseType => {
 };
 
 const HANDLERS = {
-  replace: redirectHandler,
-  redirect: replaceHandler,
+  redirect: redirectHandler,
+  replace: replaceHandler,
   cancel: cancelHandler,
 };
 

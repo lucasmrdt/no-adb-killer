@@ -62,7 +62,7 @@ const assertValidKeys = (config: ConfigItemType, verifier: object) => {
     }
   });
   validKeys.forEach(key => {
-    const isOptionnalKey = key[key.length - 1];
+    const isOptionnalKey = key[key.length - 1] === '?';
     if (!keys.has(key) && !isOptionnalKey) {
       ConfigErrors.unfoundedKey(key);
     }

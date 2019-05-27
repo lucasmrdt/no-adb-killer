@@ -10,7 +10,8 @@ const OUT_PATH = path.join(BASE_PATH, 'dist');
 const scriptBuild = merge(common, {
   entry: {
     'minify-config': path.join(SCRIPT_DIR, 'minify-config.ts'),
-    'update-config': path.join(SCRIPT_DIR, 'update-config.ts'),
+    'build-config': path.join(SCRIPT_DIR, 'build-config.ts'),
+    'display-config': path.join(SCRIPT_DIR, 'display-config.ts'),
     'deploy': path.join(SCRIPT_DIR, 'deploy.ts'),
   },
   output: {
