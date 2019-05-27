@@ -106,7 +106,7 @@ npm test
 > The [config.json](static/config.json) contains an array of configuration.
 ### Configuration Template
 |Key|Type|Value|Example|Description|
-|:-:|:-:|:-:|:-:|:-:
+|:-:|:-:|:-:|:-:|:-:|
 |**action**|`string`|[`"replace"`](#configuration-replace)<br>[`"redirect"`](#todo-redirect-cancel)<br>[`"cancel"`](#todo-redirect-cancel)|`"replace"`|The action of your configuration.
 |**name**|`string`|`any`|`"6play"`|The website name.
 |**pattern**|`string`|`any`|`"https://www.6play.fr/player-fw-*"`|The [Chrome Pattern URL](https://developer.chrome.com/apps/match_patterns).
@@ -114,7 +114,7 @@ npm test
 
 ### <a id="configuration-replace"></a>Replace Configuration
 |Key|Type|Example|Description|
-|:-:|:-:|:-:|:-:|:-:
+|:-:|:-:|:-:|:-:|
 |**from**|`string (RegExp)`|`"this\\.adblockIsActivated\\(function\\((\\w+)\\)\\{if\\(\\w+\\)"`|The excaped RegExp of the instruction to be replace.
 |**to**|`string`|`"this.adblockIsActivated(function($1){if(false)"`|The replaced string to disable the adblock killer.
 
