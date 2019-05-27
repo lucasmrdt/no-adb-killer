@@ -52,7 +52,7 @@ const displayConfigItem = (config: ConfigItemType) => {
   };
 
   const handler = ACTIONS[config.action];
-  process.stdout.write(`\n[${config.domain.bold}]\t${config.action.toUpperCase().bold} `);
+  process.stdout.write(`\n[${config.name.bold}]\t${config.action.toUpperCase().bold} `);
   // @ts-ignore
   handler(config);
 };

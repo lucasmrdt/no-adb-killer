@@ -24,7 +24,7 @@ class ConfigErrors {
 
 const DEFAULT_VERIFIER = {
   action: new Set(['redirect', 'replace', 'cancel']),
-  domain: String(),
+  name: String(),
   pattern: String(),
   'diff?': undefined,
 };
@@ -92,7 +92,7 @@ const assertValidActionKey = (config: ConfigItemType) => {
 };
 
 export const assertValidConfiguration = (configs: ConfigType) => configs.forEach(config => {
-  ConfigErrors.location = config.domain || 'unknown';
+  ConfigErrors.location = config.name || 'unknown';
   assertValidActionKey(config);
   const verifier = VERIFIERS[config.action];
   assertValidKeys(config, verifier);

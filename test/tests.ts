@@ -43,30 +43,30 @@ describe('#CONFIG', () => {
 
   it('should read the replaced script', async () => {
     const promises = configs.map(async config => {
-      const scriptPath = path.join(SCRIPT_BASE_PATH, `${config.domain}.js`);
+      const scriptPath = path.join(SCRIPT_BASE_PATH, `${config.name}.js`);
       const content = await readfile(scriptPath);
       return {...config, newContent: content};
     });
     configs = await Promise.all(promises);
   });
 
-  it('should have unique domain', () => {
-    const domains = configs.map(({domain}) => domain);
-    const uniquesNames = new Set(domains);
-    assert(domains.length === uniquesNames.size);
+  it('should have unique name', () => {
+    const names = configs.map(({name}) => name);
+    const uniquesNames = new Set(names);
+    assert(names.length === uniquesNames.size);
   });
 
   it('should have correct differences', () => {
     configs.forEach(config => {
       const diff = nodeDiff(config.oldContent, config.newContent);
-      assert.deepEqual(diff, config.diff, `[${config.domain}] difference (diff) seems to be invalid.`);
+      assert.deepEqual(diff, config.diff, `[${config.name}] difference (diff) seems to be invalid.`);
     });
   });
 
   it('should have correct chrome pattern', () => {
-    const domains = configs.map(({domain }) => domain);
-    configs.forEach(({pattern, domain}) => configs.forEach(({domain: testedDomain, url: testedUrl}) => {
-      if (testedDomain === domain) {
+    const names = configs.map(({name }) => name);
+    configs.forEach(({pattern, name}) => configs.forEach(({name: testedname, url: testedUrl}) => {
+      if (testedname === name) {
         assert(chromePatternMatch(testedUrl, pattern), `pattern '${pattern}' must match with url '${testedUrl}'.`);
       } else {
         assert(!chromePatternMatch(testedUrl, pattern), `pattern '${pattern}' mustn't match with url '${testedUrl}'.`);

@@ -6,10 +6,10 @@ export type RawItemType = {
   action: ActionType,
   /**
    * @USER
-   * Domain name of the website.
+   * name name of the website.
    * eg. `6play`
    */
-  domain: string,
+  name: string,
   /**
    * @USER
    * Chrome pattern looks like an url but you can ommit some id by `*`.

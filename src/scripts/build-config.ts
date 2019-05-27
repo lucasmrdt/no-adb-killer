@@ -22,18 +22,18 @@ const OUTPUT_CONFIG_PATH = path.join(STATIC_PATH, 'config.build.json');
 const TYPED_CONFIGS = <ConfigType> CONFIG;
 
 // @MARK: Getters/Setters
-const getJSONConfigItem = (domain: string) => {
-  const found = TYPED_CONFIGS.find(item => item.domain === domain);
+const getJSONConfigItem = (name: string) => {
+  const found = TYPED_CONFIGS.find(item => item.name === name);
   if (found === undefined) {
-    throw new Error(`Config of '${domain}' is unfound.`);
+    throw new Error(`Config of '${name}' is unfound.`);
   }
   return found;
 };
 
-const setJSONConfigItem = (domain: string, value: ConfigItemType) => {
-  const index = TYPED_CONFIGS.findIndex(item => item.domain === domain);
+const setJSONConfigItem = (name: string, value: ConfigItemType) => {
+  const index = TYPED_CONFIGS.findIndex(item => item.name === name);
   if (index === -1) {
-    throw new Error(`Config of '${domain}' is unfound.`);
+    throw new Error(`Config of '${name}' is unfound.`);
   }
   TYPED_CONFIGS[index] = value;
 };
@@ -43,7 +43,7 @@ const replaceAction = async (item: ReplaceItemType, oldScript: string) => {
   const {from, to} = item;
   const pattern = new RegExp(from, 'g');
   const newScript = oldScript.replace(pattern, to);
-  const scriptName = `${item.domain}.js`;
+  const scriptName = `${item.name}.js`;
   const scriptPath = path.join(SCRIPT_PATH, scriptName);
   await writefile(scriptPath, newScript);
 
@@ -54,13 +54,13 @@ const replaceAction = async (item: ReplaceItemType, oldScript: string) => {
     diff: nodeDiff(oldScript, newScript),
     target: scriptName,
   };
-  setJSONConfigItem(item.domain, redirectConfig);
+  setJSONConfigItem(item.name, redirectConfig);
 };
 
 const redirectAction = async (item: RedirectItemType, oldScript: string) => {
   const scriptPath = path.join(SCRIPT_PATH, item.target);
   const newScript = await readfile(scriptPath);
-  const JSONItem = getJSONConfigItem(item.domain);
+  const JSONItem = getJSONConfigItem(item.name);
   JSONItem.diff = nodeDiff(oldScript, newScript);
 };
 
@@ -79,10 +79,10 @@ const buildConfig = async (config: ConfigItemType) => {
       // @ts-ignore
       await selectedAction(config, oldScript);
     } catch (e) {
-      throw new Error(`Invalid config for '${config.domain}', verify your configuration.\n${e}`);
+      throw new Error(`Invalid config for '${config.name}', verify your configuration.\n${e}`);
     }
   } else {
-    throw new Error(`Unknown action named '${config.action}' of '${config.domain}' script.`);
+    throw new Error(`Unknown action named '${config.action}' of '${config.name}' script.`);
   }
 };
 

@@ -18,7 +18,7 @@ const replaceHandler = (url: string, config: RedirectItemType): ResponseType => 
 };
 
 const redirectHandler = (url: string, config: ReplaceItemType): ResponseType => {
-  const scriptPath = `scripts/${config.domain}.js`;
+  const scriptPath = `scripts/${config.name}.js`;
   console.log(`'${url}' ▶️ '${scriptPath}'`);
   return {redirectUrl: chrome.extension.getURL(scriptPath)};
 };

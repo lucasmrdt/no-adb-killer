@@ -1,15 +1,15 @@
 [
   {
     "action": "replace",
-    "domain": "tf1",
+    "name": "tf1",
     "pattern": "https://static.mytf1.tf1.fr/assets/js/build/blocks/sections/content-video-2-html5.js*",
     "url": "https://static.mytf1.tf1.fr/assets/js/build/blocks/sections/content-video-2-html5.js",
-    "from": "this\\.adblockIsActivated\\(function\\((\\w+)\\)\\{if\\(\\w\\)",
+    "from": "this\\.adblockIsActivated\\(function\\((\\w+)\\)\\{if\\(\\w+\\)",
     "to": "this.adblockIsActivated(function($1){if(false)"
   },
   {
     "action": "replace",
-    "domain": "6play",
+    "name": "6play",
     "pattern": "https://www.6play.fr/player-fw-*",
     "url": "https://www.6play.fr/player-fw-d18b7b5d33.bundle.js",
     "from": "this\\.dispatchEvent\\((\\w+)\\.EVENT_REQUEST_COMPLETE,{success:!1}\\)",
