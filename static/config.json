@@ -2,10 +2,10 @@
   {
     "action": "replace",
     "name": "tf1",
-    "pattern": "https://static.mytf1.tf1.fr/assets/js/build/blocks/sections/content-video-2-html5.js*",
-    "url": "https://static.mytf1.tf1.fr/assets/js/build/blocks/sections/content-video-2-html5.js",
-    "from": "this\\.adblockIsActivated\\(function\\((\\w+)\\)\\{if\\(\\w+\\)",
-    "to": "this.adblockIsActivated(function($1){if(false)"
+    "pattern": "https://www.tf1.fr/public/VideoPage_*",
+    "url": "https://www.tf1.fr/public/VideoPage_339c58745d7f51c7cd7a.js",
+    "from": "(\\w+).adBlockDetected",
+    "to": "false"
   },
   {
     "action": "replace",

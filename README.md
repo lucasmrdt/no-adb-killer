@@ -65,7 +65,7 @@ npm test
 |:-:|:-:|
 |***dist/***|📝 Where [scripts](src/scripts) are built and ready to run.|
 |***app/***|🖥 The built chrome extension.|
-|***static/config.json***|💾 Where **actions** of each site are written.<br>[See here ](#tests) to know how it's written.|
+|***static/config.json***|💾 Where **actions** of each site are written.<br>[See here ](static/config.json) to know how it's written.|
 | ***static/config.build.json***|The built config of [config.json](static/config.json).<br>**⛔️ Don't edit it, it'll be updated automatically.**|
 <br>
 
