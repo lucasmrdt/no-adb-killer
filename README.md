@@ -1,5 +1,4 @@
 # 👈🏻🚫 No AdBlock-Killer
-[![build](https://travis-ci.org/lucasmrdt/no-adb-killer.svg?branch=master)](https://travis-ci.org/lucasmrdt/no-adb-killer)
 
 > Have you ever had to disable adblock on a website? Thanks to **no-adblock-killer**, keep enjoying the **ad-free** website!
 
